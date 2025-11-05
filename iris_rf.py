@@ -8,17 +8,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import dagshub
 
-# Initialize DagsHub connection
+# Initialize DagsHub connection (updated repo name)
 dagshub.init(
     repo_owner='malaychand',
-    repo_name='daghub_connect',
+    repo_name='daghub-connect',
     mlflow=True
 )
 
 # Set MLflow tracking URI to DagsHub
-mlflow.set_tracking_uri("https://dagshub.com/malaychand/daghub_connect.mlflow")
+mlflow.set_tracking_uri("https://dagshub.com/malaychand/daghub-connect.mlflow")
 
-# Optional: to verify
+# Optional: verify the tracking URI
 print("MLflow tracking URI set to:", mlflow.get_tracking_uri())
 
 # Load the iris dataset
@@ -29,48 +29,52 @@ y = iris.target
 # Split the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Define the parameters for the Random Forest model
+# Define Random Forest parameters
 max_depth = 1
 n_estimators = 100
 
-# apply mlflow
-
+# Create (or get) MLflow experiment
 mlflow.set_experiment('iris-rf')
 
 with mlflow.start_run():
-
-    rf = RandomForestClassifier(max_depth=max_depth, n_estimators=n_estimators)
-
+    # Initialize and train the Random Forest model
+    rf = RandomForestClassifier(max_depth=max_depth, n_estimators=n_estimators, random_state=42)
     rf.fit(X_train, y_train)
 
+    # Make predictions
     y_pred = rf.predict(X_test)
 
+    # Evaluate model
     accuracy = accuracy_score(y_test, y_pred)
+    print('Accuracy:', accuracy)
 
-    mlflow.log_metric('accuracy', accuracy)
-
+    # Log parameters and metrics to MLflow
     mlflow.log_param('max_depth', max_depth)
     mlflow.log_param('n_estimators', n_estimators)
+    mlflow.log_metric('accuracy', accuracy)
 
-    # Create a confusion matrix plot
+    # Create and save confusion matrix
     cm = confusion_matrix(y_test, y_pred)
-    plt.figure(figsize=(6,6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=iris.target_names, yticklabels=iris.target_names)
+    plt.figure(figsize=(6, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                xticklabels=iris.target_names,
+                yticklabels=iris.target_names)
     plt.ylabel('Actual')
     plt.xlabel('Predicted')
     plt.title('Confusion Matrix')
-    
-    # Save the plot as an artifact
-    plt.savefig("confusion_matrix.png")
 
-    # mlflow code
+    # Save the plot and log as artifact
+    plt.savefig("confusion_matrix.png")
     mlflow.log_artifact("confusion_matrix.png")
 
-    mlflow.log_artifact(__file__)
+    # Log the trained model
+    mlflow.sklearn.log_model(rf, "random-forest-model")
 
-    mlflow.sklearn.log_model(rf, "random forest")
+    # Add useful tags
+    mlflow.set_tag('author', 'malaychand')
+    mlflow.set_tag('model', 'RandomForestClassifier')
 
-    mlflow.set_tag('author','malay')
-    mlflow.set_tag('model','random forest')
+    # (Optional) Log this script file itself if running from .py file
+    # mlflow.log_artifact(__file__)
 
-    print('accuracy', accuracy)
+print("Run completed and logged successfully.")
