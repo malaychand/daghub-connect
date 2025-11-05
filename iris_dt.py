@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
+import joblib
 import dagshub
 
 # Initialize DagsHub connection (updated repo name)
@@ -65,13 +66,13 @@ with mlflow.start_run():
     plt.savefig("confusion_matrix.png")
     mlflow.log_artifact("confusion_matrix.png")
 
-    # Log model file
-    mlflow.sklearn.log_model(dt, "decision-tree-model")
+    # ✅ Save and log model manually to avoid DagsHub unsupported endpoint error
+    joblib.dump(dt, "decision_tree_model.pkl")
+    mlflow.log_artifact("decision_tree_model.pkl")
 
     # Add useful tags
     mlflow.set_tag('author', 'malaychand')
     mlflow.set_tag('model', 'DecisionTreeClassifier')
 
-    # Optional: Log this script itself (comment out if running interactively)
+    # Optional: log script (comment if running interactively)
     # mlflow.log_artifact(__file__)
-
