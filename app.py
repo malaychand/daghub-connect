@@ -2,32 +2,75 @@ import streamlit as st
 import joblib
 import numpy as np
 from sklearn.datasets import load_iris
+import time
 
-# Load model
+# -------------------------------
+# Load Model & Dataset
+# -------------------------------
 model = joblib.load("random_forest_model.pkl")
-
-# Load iris dataset (for target names)
 iris = load_iris()
 target_names = iris.target_names
 
-# Streamlit app setup
-st.set_page_config(page_title="Iris Classifier", page_icon="🌸")
+# -------------------------------
+# Streamlit Page Configuration
+# -------------------------------
+st.set_page_config(
+    page_title="Iris Classifier 🌸",
+    page_icon="🌸",
+    layout="centered",
+)
+
+# -------------------------------
+# Header Section
+# -------------------------------
 st.title("🌸 Iris Flower Classification App")
-st.write("This Streamlit app uses a **Random Forest model** trained and logged via **MLflow on DagsHub**.")
-st.markdown("[View MLflow Experiment →](https://dagshub.com/malaychand/daghub-connect.mlflow/)")
+st.markdown(
+    """
+This interactive app uses a **Random Forest Classifier** trained on the classic **Iris dataset**  
+and logged via **MLflow**, integrated with **DagsHub** for experiment tracking.  
 
-# User inputs
+Explore:
+- 🔗 [**DagsHub Repository**](https://dagshub.com/malaychand/daghub-connect)
+- 📊 [**MLflow Tracking UI**](https://dagshub.com/malaychand/daghub-connect.mlflow/)
+- 💻 [**GitHub Repository**](https://github.com/malaychand/daghub-connect)
+"""
+)
+st.markdown("---")
+
+# -------------------------------
+# Input Section
+# -------------------------------
 st.header("🔧 Input Flower Measurements")
-sepal_length = st.slider("Sepal length (cm)", 4.0, 8.0, 5.1)
-sepal_width = st.slider("Sepal width (cm)", 2.0, 4.5, 3.5)
-petal_length = st.slider("Petal length (cm)", 1.0, 7.0, 1.4)
-petal_width = st.slider("Petal width (cm)", 0.1, 2.5, 0.2)
+col1, col2 = st.columns(2)
 
-# Predict
+with col1:
+    sepal_length = st.slider("Sepal length (cm)", 4.0, 8.0, 5.1)
+    petal_length = st.slider("Petal length (cm)", 1.0, 7.0, 1.4)
+
+with col2:
+    sepal_width = st.slider("Sepal width (cm)", 2.0, 4.5, 3.5)
+    petal_width = st.slider("Petal width (cm)", 0.1, 2.5, 0.2)
+
+# -------------------------------
+# Prediction Section
+# -------------------------------
 if st.button("🌼 Predict"):
     features = np.array([[sepal_length, sepal_width, petal_length, petal_width]])
     prediction = model.predict(features)[0]
-    st.success(f"🌸 Predicted Iris Species: **{target_names[prediction]}**")
+    predicted_class = target_names[prediction]
+    
+    st.success(f"🌸 **Predicted Iris Species:** {predicted_class}")
+    with st.empty():
+        st.write("Loading...")
+        time.sleep(.5)
+        st.write("Complete!")
 
+# -------------------------------
+# Footer Section
+# -------------------------------
 st.markdown("---")
-st.caption("Built with ❤️ by Malay Chand | Powered by Streamlit & DagsHub MLflow")
+st.caption(
+    """ 
+Powered by [Streamlit](https://streamlit.io), [MLflow](https://mlflow.org/), and [DagsHub](https://dagshub.com)
+"""
+)
