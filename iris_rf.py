@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
+import joblib
 import dagshub
 
 # Initialize DagsHub connection (updated repo name)
@@ -67,8 +68,9 @@ with mlflow.start_run():
     plt.savefig("confusion_matrix.png")
     mlflow.log_artifact("confusion_matrix.png")
 
-    # Log the trained model
-    mlflow.sklearn.log_model(rf, "random-forest-model")
+    # ✅ Save and log model manually instead of using log_model()
+    joblib.dump(rf, "random_forest_model.pkl")
+    mlflow.log_artifact("random_forest_model.pkl")
 
     # Add useful tags
     mlflow.set_tag('author', 'malaychand')
