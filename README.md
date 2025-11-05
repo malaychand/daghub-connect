@@ -1,20 +1,25 @@
 # 🧠 daghub-connect
 
-This project demonstrates how to integrate **MLflow** experiment tracking with **DagsHub** using a simple machine learning workflow.
+This project demonstrates how to integrate **MLflow** experiment tracking with **DagsHub** using a simple machine learning workflow (Iris dataset with Random Forest and Decision Tree models).
 
 ## 🚀 Overview
-The repository logs model parameters, metrics, and artifacts (like confusion matrices and trained models) directly to **DagsHub MLflow Tracking Server**.
-
-DagsHub Repository:  
-🔗 [https://dagshub.com/malaychand/daghub-connect](https://dagshub.com/malaychand/daghub-connect)
-
-MLflow Tracking UI:  
-📊 [https://dagshub.com/malaychand/daghub-connect.mlflow/](https://dagshub.com/malaychand/daghub-connect.mlflow/)
+Models, metrics, and artifacts (like confusion matrices) are logged to **DagsHub MLflow Tracking Server**.  
+You can explore the MLflow dashboard or try the interactive Streamlit app.
 
 ---
+### 🌸 Live Streamlit App  
+🔗 [https://dagapp-connect-vmry6qjvyelpnypcn5yqhe.streamlit.app/](https://dagapp-connect-vmry6qjvyelpnypcn5yqhe.streamlit.app/)
 
-## ⚙️ Features
-- Logs metrics and parameters from ML experiments.
-- Tracks model versions and artifacts.
-- Generates confusion matrix visualizations.
-- Compatible with DagsHub’s remote MLflow server.
+### 📊 MLflow Tracking UI  
+🔗 [https://dagshub.com/malaychand/daghub-connect.mlflow/](https://dagshub.com/malaychand/daghub-connect.mlflow/)
+
+### 📂 DagsHub Repository  
+🔗 [https://dagshub.com/malaychand/daghub-connect](https://dagshub.com/malaychand/daghub-connect)
+---
+
+💡 **Tech Stack:**  
+- Python 🐍  
+- scikit-learn  
+- MLflow  
+- DagsHub  
+- Streamlit
